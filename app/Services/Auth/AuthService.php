@@ -9,6 +9,12 @@ use App\Models\User;
 class AuthService
 {
     use ApiException;
+
+     /**
+      * User login
+      * @param array $data
+      * @return \App\Models\User
+      */
      public function login(array $data): User
     {
         if (! Auth::attempt($data)) {
