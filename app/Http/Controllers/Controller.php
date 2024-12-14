@@ -7,5 +7,5 @@ use App\Traits\ApiException;
 
 abstract class Controller
 {
-  use ApiException, ApiResponse;
+    use ApiException, ApiResponse;
 }
