@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{
+    Auth\AuthController
+};
 
 Route::prefix('v1')->group(function () {
     // Rota de boas-vindas
@@ -13,4 +16,10 @@ Route::prefix('v1')->group(function () {
             'documentation' => config('app.documentation')
         ];
     });
+
+    // Routes auth
+    Route::prefix('auth')->controller(AuthController::class)->group(function () {
+        Route::post('/login', 'login');
+    });
+
 });
