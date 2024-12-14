@@ -17,6 +17,19 @@ class AuthService
 
         $token = Auth::user()->createToken('auth_token')->plainTextToken;
         return Auth::user();
+    }
+      /**
+     * User logout
+     *
+     * @param  User  $user
+     * @return void
+     */
+    public function logout(User $user): void
+    {
+        if(! $user){
+            $this->notFoundRequestException('Usuário não encontrado');
+        }
 
+        $user->tokens()->delete();
     }
 }

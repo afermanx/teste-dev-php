@@ -22,4 +22,11 @@ Route::prefix('v1')->group(function () {
         Route::post('/login', 'login');
     });
 
+    //require authentication
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::prefix('users')->group(function () {
+            Route::post('/logout', [AuthController::class, 'logout']);
+        });
+    });
+
 });
