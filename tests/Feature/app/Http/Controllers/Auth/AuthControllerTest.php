@@ -19,7 +19,7 @@
             ]);
         }
 
-        protected string $baseUrl = '/api/v1/auth';
+        protected string $baseUrl = '/api/v1';
         #[Test]
         public function it_should_login_a_user(): void
         {
@@ -29,7 +29,7 @@
             'password' => 'password',
             ];
 
-            $this->postJson( $this->baseUrl . '/login', $data)
+            $this->postJson( $this->baseUrl . '/auth/login', $data)
                 ->assertStatus(200)
                 ->assertJson([
                 'name' => 'Test User',
@@ -49,10 +49,21 @@
             'password' => 'wrong-password',
             ];
 
-            $this->postJson( $this->baseUrl . '/login', $data)
+            $this->postJson( $this->baseUrl . '/auth/login', $data)
                 ->assertStatus(400)
                 ->assertJsonStructure([
                     'error',
                 ]);
+        }
+
+        #[Test]
+        public function it_should_logout_a_user(): void
+        {
+            // criar um usaurio e autenticar
+            $user = $this->createUser();
+            $this->actingAs($user);
+            $this->postJson( $this->baseUrl . '/users/logout')
+                ->assertStatus(204)
+                ->assertNoContent();
         }
     }
