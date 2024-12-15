@@ -3,6 +3,7 @@
 namespace App\Services\Suppliers;
 
 use auth;
+use App\Models\User;
 use App\Models\Supplier;
 use App\Traits\ApiException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -10,6 +11,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class SupplierService
 {
 
+    use ApiException;
     public function listAll(array $data): LengthAwarePaginator
     {
         $query = Supplier::query();
@@ -23,7 +25,6 @@ class SupplierService
         return $query->paginate($data['per_page'] ?? 5);
 
     }
-    use ApiException;
         /**
          * Create supplier
          * @param array $data
@@ -40,6 +41,18 @@ class SupplierService
             }
             return Supplier::create($data);
         }
+        public function update(array $data, Supplier $supplier): Supplier
+        {
+            if ($this->verifyUniqueDocument($data, $supplier)) {
+                $this->badRequestException(['error' => 'Documento já cadastrado.']);
+            }
+            if($this->verifyUniquePhone($data, $supplier)) {
+                $this->badRequestException(['error' => 'Telefone já cadastrado.']);
+            }
+            $supplier->update($data);
+            return $supplier;
+        }
+
         /**
          * Apply filters
          * @param mixed $query
@@ -95,7 +108,9 @@ class SupplierService
          */
         private function verifyUniquePhone(array $data, ?Supplier $supplier = null): bool
         {
-
+            if (!isset($data['phone'])) {
+                return false;
+            }
             $query = Supplier::query();
 
             if (isset($data['phone']['ddd'])) {
@@ -105,7 +120,7 @@ class SupplierService
                 $query->where('phone->number', $data['phone']['number']);
             }
             if ($supplier) {
-                $query->where('id', '<>', $supplier->id);
+                $query->where('id', '!=', $supplier->id)->exists();
             }
             return $query->exists();
         }
@@ -117,10 +132,10 @@ class SupplierService
          */
         private function sanitizeData(array &$data): array
         {
-        return [
-            ...$data,
-            'user_id' => auth()->user()->id,
-            'fantasy_name' => $data['fantasy_name'] ?? $data['name'],
-        ];
+            return [
+                ...$data,
+                'user_id' => auth()->user()->id,
+                'fantasy_name' => $data['fantasy_name'] ?? $data['name'],
+            ];
         }
 }

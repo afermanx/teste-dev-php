@@ -4,7 +4,6 @@ namespace Tests\Feature\App\Http\Controllers\Suppliers;
 
 use Tests\TestCase;
 use App\Models\User;
-use App\Models\Supplier;
 use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

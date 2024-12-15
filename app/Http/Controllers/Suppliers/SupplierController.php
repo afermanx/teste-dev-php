@@ -13,6 +13,7 @@ use App\Services\Suppliers\SupplierService;
 use App\Http\Requests\Suppliers\{
     IndexSupplierRequest,
     CreateSupplierRequest,
+    UpdateSupplierRequest,
 };
 use App\Models\Supplier;
 
@@ -48,9 +49,9 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateSupplierRequest $request, Supplier $supplier): JsonResponse
     {
-        //
+        return $this->ok(SupplierResource::make($this->service->update($request->validated(), $supplier)));
     }
 
     /**
