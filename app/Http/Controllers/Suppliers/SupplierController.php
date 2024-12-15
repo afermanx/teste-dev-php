@@ -6,7 +6,6 @@ use App\Http\Resources\Suppliers\{
     SupplierResource,
     SupplierResourceCollection,
 };
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Services\Suppliers\SupplierService;
@@ -57,8 +56,9 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Supplier $supplier): JsonResponse
     {
-        //
+        $supplier->delete();
+        return $this->noContent();
     }
 }

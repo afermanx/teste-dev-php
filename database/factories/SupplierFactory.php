@@ -45,6 +45,7 @@ class SupplierFactory extends Factory
                 'ddd' => $this->faker->randomNumber(2),
                 'number' => $this->faker->phoneNumber,
             ],
+            'deleted_at' => $this->faker->optional(0.5)->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

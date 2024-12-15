@@ -4,7 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     Auth\AuthController,
-    Suppliers\SupplierController
+    Suppliers\SupplierController,
+    Suppliers\RestoreSupplierController
 };
 use App\Http\Resources\Users\UserResource;
 
@@ -33,10 +34,12 @@ Route::prefix('v1')->group(function () {
             Route::post('/logout', [AuthController::class, 'logout']);
         });
         Route::prefix('suppliers')->controller(SupplierController::class)->group(function () {
+            Route::post('/{supplier}/restore', RestoreSupplierController::class)->withTrashed();
             Route::get('/', 'index');
             Route::get('/{supplier}', 'show');
             Route::post('/', 'store');
             Route::patch('/{supplier}', 'update');
+            Route::delete('/{supplier}', 'destroy');
         });
     });
 
