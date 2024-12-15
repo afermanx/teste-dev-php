@@ -37,6 +37,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/{supplier}', 'show');
             Route::post('/', 'store');
             Route::patch('/{supplier}', 'update');
+            Route::delete('/{supplier}', 'destroy');
         });
     });
 
