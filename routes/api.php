@@ -3,8 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    Auth\AuthController
+    Auth\AuthController,
+    Suppliers\SupplierController
 };
+use App\Http\Resources\Users\UserResource;
 
 Route::prefix('v1')->group(function () {
     // Rota de boas-vindas
@@ -25,7 +27,13 @@ Route::prefix('v1')->group(function () {
     //require authentication
     Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('users')->group(function () {
+            Route::get('/me', function (Request $request) {
+                return  UserResource::make($request->user());
+            });
             Route::post('/logout', [AuthController::class, 'logout']);
+        });
+        Route::prefix('suppliers')->controller(SupplierController::class)->group(function () {
+            Route::post('/', 'store');
         });
     });
 
