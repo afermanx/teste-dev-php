@@ -5,9 +5,24 @@ namespace App\Services\Suppliers;
 use auth;
 use App\Models\Supplier;
 use App\Traits\ApiException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class SupplierService
 {
+
+    public function listAll(array $data): LengthAwarePaginator
+    {
+        $query = Supplier::query();
+
+        $query->where('user_id', auth()->user()->id);
+
+        $this->applyFilters($query, $data);
+
+        $query->orderBy($data['order_by'] ?? 'updated_at', $data['order'] ?? 'asc');
+
+        return $query->paginate($data['per_page'] ?? 5);
+
+    }
     use ApiException;
         /**
          * Create supplier
@@ -25,6 +40,28 @@ class SupplierService
             }
             return Supplier::create($data);
         }
+        /**
+         * Apply filters
+         * @param mixed $query
+         * @param array $data
+         * @return void
+         */
+        private function applyFilters($query, array $data): void
+        {
+            $query->where(function ($query) use ($data) {
+                if (!empty($data['name'])) {
+                    $query->orWhere('name', 'like', '%' . $data['name'] . '%');
+                }
+
+                if (!empty($data['fantasy_name'])) {
+                    $query->orWhere('fantasy_name', 'like', '%' . $data['fantasy_name'] . '%');
+                }
+
+                if (!empty($data['document'])) {
+                    $query->orWhere('document->number', $data['document']);
+                }
+            });
+        }
 
         /**
          * Verify unique document
@@ -32,7 +69,7 @@ class SupplierService
          * @param mixed $supplier
          * @return bool
          */
-        private function  verifyUniqueDocument(array &$data, ?Supplier $supplier = null): bool
+        private function verifyUniqueDocument(array &$data, ?Supplier $supplier = null): bool
         {
             $query = Supplier::query();
             if (! isset($data['document'])) {

@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers\Suppliers;
 
+use App\Http\Resources\Suppliers\{
+    SupplierResource,
+    SupplierResourceCollection,
+};
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Services\Suppliers\SupplierService;
-use App\Http\Requests\Suppliers\CreateSupplierRequest;
-use App\Http\Resources\Suppliers\SupplierResource;
+use App\Http\Requests\Suppliers\{
+    IndexSupplierRequest,
+    CreateSupplierRequest,
+};
+use App\Models\Supplier;
 
 class SupplierController extends Controller
 {
@@ -17,9 +24,9 @@ class SupplierController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexSupplierRequest $request): JsonResponse
     {
-        //
+        return $this->ok( new SupplierResourceCollection($this->service->listAll($request->validated())));
     }
 
     /**
@@ -33,9 +40,9 @@ class SupplierController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Supplier $supplier): JsonResponse
     {
-        //
+        return $this->ok(SupplierResource::make($supplier));
     }
 
     /**

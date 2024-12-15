@@ -27,13 +27,15 @@ class CheckDocumentNumber implements DataAwareRule, InvokableRule
     public function __invoke($attribute, $value, $fail)
     {
         $documentNumber = str_replace(['.', '-', '/'], '', $value);
-        if ($this->data['document']['type'] === DocumentTypeEnum::CPF) {
+        $isCpf = strlen($documentNumber) === 11;
+        $isCnpj = strlen($documentNumber) === 14;
+        if ($isCpf) {
             $this->checkCpf($documentNumber, $fail);
 
             return;
         }
 
-        if ($this->data['document']['type'] === DocumentTypeEnum::CNPJ) {
+        if ($isCnpj) {
             $this->checkCnpj($documentNumber, $fail);
 
             return;
