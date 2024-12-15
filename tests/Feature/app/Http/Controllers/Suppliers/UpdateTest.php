@@ -26,7 +26,8 @@ class UpdateTest extends TestCase
     {
         $user = $this->createUser();
         $supplier = Supplier::factory()->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'deleted_at' =>  null
         ]);
 
         $this->actingAs($user);

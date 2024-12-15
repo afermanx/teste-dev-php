@@ -82,6 +82,7 @@ class IndexTest extends TestCase
         // Criando fornecedores e associando ao usuário criado
         Supplier::factory(10)->create([
             'user_id' => $this->user->id,
+            'deleted_at' =>  null
         ]);
 
         // Realizando o login com o usuário criado

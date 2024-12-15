@@ -15,7 +15,12 @@ class RestoreTest extends TestCase
     public function restore()
     {
         $user = User::factory()->create();
-        $supplier = Supplier::factory()->create();
+        $supplier = Supplier::factory()->create(
+            [
+                'user_id' => $user->id,
+                'deleted_at' =>  now()
+            ]
+        );
         $this->actingAs($user);
 
         $this->postJson('/api/v1/suppliers/' . $supplier->id . '/restore')

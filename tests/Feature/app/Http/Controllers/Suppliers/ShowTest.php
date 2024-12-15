@@ -18,6 +18,7 @@ class ShowTest extends TestCase
         $user = User::factory()->create();
         $supplier = Supplier::factory()->create([
             'user_id' => $user->id,
+            'deleted_at' =>  null
         ]);
 
         $this->actingAs($user);

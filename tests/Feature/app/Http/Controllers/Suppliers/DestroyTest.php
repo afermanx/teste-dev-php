@@ -16,7 +16,12 @@ class DestroyTest extends TestCase
     public function destroy()
     {
         $user = User::factory()->create();
-        $supplier = Supplier::factory()->create();
+        $supplier = Supplier::factory()->create(
+            [
+                'user_id' => $user->id,
+                'deleted_at' =>  null
+            ]
+        );
         $this->actingAs($user);
 
         $this->deleteJson('/api/v1/suppliers/' . $supplier->id)
