@@ -14,6 +14,7 @@ use App\Http\Requests\Suppliers\{
     IndexSupplierRequest,
     CreateSupplierRequest,
 };
+use App\Models\Supplier;
 
 class SupplierController extends Controller
 {
@@ -39,9 +40,9 @@ class SupplierController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Supplier $supplier): JsonResponse
     {
-        //
+        return $this->ok(SupplierResource::make($supplier));
     }
 
     /**
