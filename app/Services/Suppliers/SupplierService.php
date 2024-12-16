@@ -6,6 +6,7 @@ use auth;
 use App\Models\User;
 use App\Models\Supplier;
 use App\Traits\ApiException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class SupplierService
@@ -13,18 +14,25 @@ class SupplierService
 
     use ApiException;
     public function listAll(array $data): LengthAwarePaginator
-    {
+{
+    $userId = auth()->user()->id;
+    $cacheKey = 'suppliers_' . $userId . '_'. md5(json_encode($data));
+
+    // Tenta obter os dados do cache
+    $suppliers = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($data, $userId) {
         $query = Supplier::query();
 
-        $query->where('user_id', auth()->user()->id);
+        $query->where('user_id', $userId);
 
         $this->applyFilters($query, $data);
 
         $query->orderBy($data['order_by'] ?? 'updated_at', $data['order'] ?? 'asc');
 
         return $query->paginate($data['per_page'] ?? 5);
+    });
 
-    }
+    return $suppliers;
+}
         /**
          * Create supplier
          * @param array $data

@@ -42,6 +42,7 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier): JsonResponse
     {
+        $this->authorize('supplierOwner', $supplier);
         return $this->ok(SupplierResource::make($supplier));
     }
 
@@ -50,6 +51,7 @@ class SupplierController extends Controller
      */
     public function update(UpdateSupplierRequest $request, Supplier $supplier): JsonResponse
     {
+         $this->authorize('supplierOwner', $supplier);
         return $this->ok(SupplierResource::make($this->service->update($request->validated(), $supplier)));
     }
 
@@ -58,6 +60,7 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier): JsonResponse
     {
+         $this->authorize('supplierOwner', $supplier);
         $supplier->delete();
         return $this->noContent();
     }
