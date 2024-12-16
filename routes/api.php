@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     Auth\AuthController,
     Suppliers\SupplierController,
-    Suppliers\RestoreSupplierController
+    Suppliers\RestoreSupplierController,
+    getCompanyByCnpjController,
 };
 use App\Http\Resources\Users\UserResource;
 
@@ -42,5 +43,8 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{supplier}', 'destroy');
         });
     });
+
+
+    Route::get('/company/search', getCompanyByCnpjController::class);
 
 });
